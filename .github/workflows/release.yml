@@ -32,12 +32,23 @@ jobs:
           fi
       - name: Publish to npm (idempotent)
         run: |
+          PKG="$(node -p "require('./package.json').name")"
           VERSION="${GITHUB_REF_NAME#v}"
-          if npm view "@hamzaabili/handoffmd@${VERSION}" version >/dev/null 2>&1; then
-            echo "@hamzaabili/handoffmd@${VERSION} is already published"
-          else
-            npm publish --provenance --access public
+          URL="https://registry.npmjs.org/${PKG//\//%2F}/${VERSION}"
+          CODE="$(curl -sS -o /dev/null -w '%{http_code}' "$URL" || true)"
+          if [ "$CODE" = "200" ]; then
+            echo "${PKG}@${VERSION} is already published"
+            exit 0
           fi
+          if [ "$CODE" != "404" ]; then
+            echo "could not determine whether ${PKG}@${VERSION} exists (HTTP ${CODE})" >&2
+            exit 1
+          fi
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "NPM_TOKEN is not configured; cannot publish ${PKG}@${VERSION}" >&2
+            exit 1
+          fi
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Create GitHub release (idempotent)
