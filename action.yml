@@ -8,7 +8,7 @@ inputs:
   version:
     description: handoffmd version to run.
     required: false
-    default: "0.1.0"
+    default: "0.1.1"
   path:
     description: Repository directory that contains HANDOFF.md.
     required: false

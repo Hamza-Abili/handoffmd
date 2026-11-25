@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] — 2026-11-25
+
+### Added
+
+- Integration tests for `list`, `show`, `prune` and `load`, including stale-handoff refusal, token budgeting and redaction.
+
+### Fixed
+
+- Numeric flags now reject trailing text, fractions and unsafe values instead of silently truncating.
+
+### Changed
+
+- Package metadata declares public npm access and a normalized `bin` path.
+
 ## [0.1.0] — 2026-11-25
 
 First release.

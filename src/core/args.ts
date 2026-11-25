@@ -102,8 +102,11 @@ export function intFlag(
 ): number {
   const raw = stringFlag(flags, name);
   if (raw === undefined) return fallback;
-  const value = Number.parseInt(raw, 10);
-  if (!Number.isFinite(value) || value < 0) {
+  if (!/^\d+$/.test(raw)) {
+    throw new CliError(`--${name} must be a non-negative integer`, 2);
+  }
+  const value = Number(raw);
+  if (!Number.isSafeInteger(value)) {
     throw new CliError(`--${name} must be a non-negative integer`, 2);
   }
   return value;

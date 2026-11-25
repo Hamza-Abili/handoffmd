@@ -18,9 +18,9 @@ import { redactAll } from "./core/redact.ts";
 const VERSION = (() => {
   try {
     const file = new URL("../package.json", import.meta.url);
-    return (JSON.parse(readFileSync(file, "utf8")) as { version?: string }).version ?? "0.1.0";
+    return (JSON.parse(readFileSync(file, "utf8")) as { version?: string }).version ?? "0.1.1";
   } catch {
-    return "0.1.0";
+    return "0.1.1";
   }
 })();
 

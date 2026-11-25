@@ -76,7 +76,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npx @hamzaabili/handoffmd@0.1.0 check --strict
+      - run: npx @hamzaabili/handoffmd@0.1.1 check --strict
 ```
 
 Run it from the repository root. `handoffmd` uses one handoff per repository; use a separate worktree for a separate task.

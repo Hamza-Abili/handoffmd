@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { type AgentSelection, loadSession } from "../adapters/index.ts";
-import { boolFlag, stringFlag } from "../core/args.ts";
+import { boolFlag, intFlag, stringFlag } from "../core/args.ts";
 import { archiveDir, handoffPath, isExcluded, isHandoffPath, statePath } from "../core/config.ts";
 import { CliError } from "../core/errors.ts";
 import { runTestCommand } from "../core/execute.ts";
@@ -86,10 +86,10 @@ export async function saveCommand(
   if (lock && boolFlag(flags, "new")) {
     throw new CliError("--new cannot be combined with --lock", 2);
   }
-  const testTimeout = Number.parseInt(stringFlag(flags, "test-timeout", "120") ?? "120", 10);
+  const testTimeout = intFlag(flags, "test-timeout", 120);
   const extraTests: TestEvidence[] = [];
   if (testCommand) {
-    if (!Number.isFinite(testTimeout) || testTimeout <= 0) {
+    if (testTimeout <= 0) {
       throw new CliError("--test-timeout must be a positive number of seconds", 2);
     }
     if (dryRun) {

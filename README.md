@@ -162,7 +162,7 @@ Any agent that can read `HANDOFF.md` can consume a handoff. The adapters only au
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: Hamza-Abili/handoffmd@v0.1.0
+- uses: Hamza-Abili/handoffmd@v0.1.1
   with:
     path: .
 ```
@@ -174,7 +174,7 @@ Or run the CLI directly with any Node setup:
 - uses: actions/setup-node@v4
   with:
     node-version: 22
-- run: npx @hamzaabili/handoffmd@0.1.0 check --strict
+- run: npx @hamzaabili/handoffmd@0.1.1 check --strict
 ```
 
 `check` exits `0` when clean, `1` on findings, and `2` on usage or internal errors.
@@ -242,6 +242,9 @@ Yes. Any agent can read `HANDOFF.md` and the output of `handoffmd load`. For aut
 
 **Why not just ask the agent to write a handoff?**
 You can. `handoffmd` adds what the agent cannot: a stable format, git evidence, freshness checks, secret scanning, a token budget, and a compact loader for the next agent.
+
+**Does it move my whole session to another agent?**
+No. Session-transfer tools replay the transcript; `handoffmd` writes a small, verified brief that any agent can read. Use a transfer tool when you need the full conversation, and `handoffmd` when you need to know what is true now and what to do next. The two are complementary.
 
 **Does it modify my repository?**
 It writes `HANDOFF.md`, `.handoff/config.json`, `.handoff/state.json` and the skill file. `init` never overwrites an existing `HANDOFF.md` unless you pass `--force`.

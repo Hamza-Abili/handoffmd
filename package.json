@@ -1,6 +1,6 @@
 {
   "name": "@hamzaabili/handoffmd",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Verified session handoffs for any coding agent. One HANDOFF.md, grounded in git evidence, checked for freshness and secrets, loadable by Claude Code, Codex, OpenCode or any agent.",
   "type": "module",
   "license": "MIT",
@@ -32,7 +32,10 @@
     "url": "https://github.com/Hamza-Abili/handoffmd/issues"
   },
   "bin": {
-    "handoffmd": "./dist/cli.js"
+    "handoffmd": "dist/cli.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dist",
