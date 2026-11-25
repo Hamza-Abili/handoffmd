@@ -134,6 +134,18 @@ export async function loadOpenCodeSession(options: AdapterOptions): Promise<Sess
           `${rawCwd}%`
         )[0] ?? null;
       if (!session) {
+        const recent = db.all("SELECT * FROM session_v2 ORDER BY time_updated DESC LIMIT 500");
+        session =
+          recent.find((row) => {
+            const values = [asString(row.directory), asString(row.path)].filter(
+              (value): value is string => Boolean(value)
+            );
+            return values.some(
+              (value) => realpathSafe(value) === cwd || path.resolve(value) === rawCwd
+            );
+          }) ?? null;
+      }
+      if (!session) {
         throw new CliError(
           `no OpenCode session matches ${cwd}`,
           2,
