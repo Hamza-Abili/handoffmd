@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { type AgentSelection, loadSession } from "../adapters/index.ts";
 import { boolFlag, stringFlag } from "../core/args.ts";
-import { archiveDir, handoffPath, isExcluded, isHandoffPath } from "../core/config.ts";
+import { archiveDir, handoffPath, isExcluded, isHandoffPath, statePath } from "../core/config.ts";
 import { CliError } from "../core/errors.ts";
 import { runTestCommand } from "../core/execute.ts";
 import {
@@ -63,6 +63,7 @@ export async function saveCommand(
   })
 ): Promise<number> {
   const file = handoffPath(context.root, context.config);
+  assertSafeWrite(context.root, statePath(context.root));
   const lock = boolFlag(flags, "lock");
   const dryRun = boolFlag(flags, "dry-run");
   const noRedact = boolFlag(flags, "no-redact");

@@ -1,6 +1,13 @@
 import { Database } from "bun:sqlite";
 import { describe, expect, test } from "bun:test";
-import { copyFileSync, mkdirSync, mkdtempSync, truncateSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  mkdirSync,
+  mkdtempSync,
+  symlinkSync,
+  truncateSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { findClaudeFile, parseClaudeTranscript } from "../src/adapters/claude.ts";
@@ -201,6 +208,14 @@ describe("opencode adapter", () => {
     );
     expect(session.tests[0].command).toBe("bun test");
     expect(session.compactions).toBe(1);
+
+    if (process.platform !== "win32") {
+      const aliasParent = mkdtempSync(path.join(tmpdir(), "handoffmd-opencode-alias-"));
+      const alias = path.join(aliasParent, "alias");
+      symlinkSync(dir, alias, "dir");
+      const aliased = await loadOpenCodeSession({ cwd: alias, transcript: dbFile });
+      expect(aliased.id).toBe("ses_test");
+    }
 
     const other = mkdtempSync(path.join(tmpdir(), "handoffmd-opencode-other-"));
     await expect(loadOpenCodeSession({ cwd: other, transcript: dbFile })).rejects.toThrow(

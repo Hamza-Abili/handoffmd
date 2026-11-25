@@ -119,15 +119,19 @@ export async function loadOpenCodeSession(options: AdapterOptions): Promise<Sess
       }
     } else {
       const cwd = realpathSafe(options.cwd);
+      const rawCwd = path.resolve(options.cwd);
       session =
         db.all(
           `SELECT * FROM session_v2
-           WHERE directory = ? OR directory = ? OR path = ? OR directory LIKE ?
+           WHERE directory IN (?, ?) OR path IN (?, ?)
+              OR directory LIKE ? OR directory LIKE ?
            ORDER BY time_updated DESC LIMIT 20`,
           cwd,
-          `${cwd}${path.sep}`,
+          rawCwd,
           cwd,
-          `${cwd}%`
+          rawCwd,
+          `${cwd}%`,
+          `${rawCwd}%`
         )[0] ?? null;
       if (!session) {
         throw new CliError(

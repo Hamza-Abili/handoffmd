@@ -45,46 +45,63 @@ export function readJsonIfExists<T>(file: string): T | null {
   }
 }
 
-export function assertSafeRead(root: string, file: string): void {
-  const rootReal = realpathSafe(root);
+function symlinkComponent(root: string, file: string): string | null {
+  const rootRaw = path.resolve(root);
   const target = path.resolve(file);
+  if (existsSync(target) && lstatSync(target).isSymbolicLink()) return target;
+  let current = path.dirname(target);
+  while (current !== rootRaw && current !== path.dirname(current)) {
+    if (existsSync(current) && lstatSync(current).isSymbolicLink()) return current;
+    current = path.dirname(current);
+  }
+  return null;
+}
+
+function realTarget(file: string): string {
+  let current = path.resolve(file);
+  const tail: string[] = [];
+  while (!existsSync(current)) {
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    tail.unshift(path.basename(current));
+    current = parent;
+  }
+  return path.join(realpathSafe(current), ...tail);
+}
+
+export function assertSafeRead(root: string, file: string): void {
+  const rootReal = realTarget(root);
+  const target = realTarget(file);
   if (!isInside(rootReal, target)) {
-    throw new CliError(`refusing to read outside the repository: ${file}`, 2);
-  }
-  if (existsSync(target)) {
-    const resolved = realpathSafe(target);
-    if (!isInside(rootReal, resolved)) {
-      throw new CliError(`refusing to read a symlink outside the repository: ${file}`, 2);
-    }
-    return;
-  }
-  const parent = path.dirname(target);
-  if (existsSync(parent) && !isInside(rootReal, realpathSafe(parent))) {
-    throw new CliError(`refusing to read through a symlink outside the repository: ${file}`, 2);
+    const link = symlinkComponent(root, file);
+    throw new CliError(
+      link
+        ? `refusing to read through a symlink outside the repository: ${file}`
+        : `refusing to read outside the repository: ${file}`,
+      2
+    );
   }
 }
 
 export function assertSafeWrite(root: string, file: string): void {
-  const rootReal = realpathSafe(root);
-  const target = path.resolve(file);
+  const rootReal = realTarget(root);
+  const rawTarget = path.resolve(file);
+  const target = realTarget(file);
   if (!isInside(rootReal, target)) {
-    throw new CliError(`refusing to write outside the repository: ${file}`, 2);
+    const link = symlinkComponent(root, file);
+    throw new CliError(
+      link
+        ? `refusing to write through a symlink outside the repository: ${file}`
+        : `refusing to write outside the repository: ${file}`,
+      2
+    );
   }
-  let current = path.dirname(target);
-  while (isInside(rootReal, current) && current !== rootReal) {
-    if (existsSync(current)) {
-      const stat = lstatSync(current);
-      if (stat.isSymbolicLink()) {
-        throw new CliError(`refusing to write through a symlink: ${current}`, 2);
-      }
-    }
-    current = path.dirname(current);
+  const innerLink = symlinkComponent(root, file);
+  if (innerLink) {
+    throw new CliError(`refusing to write through a symlink: ${innerLink}`, 2);
   }
-  if (existsSync(target)) {
-    const stat = lstatSync(target);
-    if (stat.isSymbolicLink()) {
-      throw new CliError(`refusing to overwrite a symlink: ${target}`, 2);
-    }
+  if (existsSync(rawTarget) && lstatSync(rawTarget).isSymbolicLink()) {
+    throw new CliError(`refusing to overwrite a symlink: ${rawTarget}`, 2);
   }
 }
 

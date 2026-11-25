@@ -23,6 +23,7 @@ import { saveCommand } from "../src/commands/save.ts";
 import { showCommand } from "../src/commands/show.ts";
 import { skillCommand } from "../src/commands/skill.ts";
 import { DEFAULT_CONFIG, isExcluded, readConfig } from "../src/core/config.ts";
+import { assertSafeRead, assertSafeWrite, writeFileInside } from "../src/core/fs.ts";
 
 function repo(): string {
   const dir = mkdtempSync(path.join(tmpdir(), "handoffmd-security-"));
@@ -83,7 +84,7 @@ describe("write safety", () => {
     const dir = repo();
     const outside = mkdtempSync(path.join(tmpdir(), "handoffmd-outside-"));
     symlinkSync(outside, path.join(dir, ".handoff"), "dir");
-    expect(() => initCommand({ cwd: dir, quiet: true })).toThrow("symlink");
+    expect(() => initCommand({ cwd: dir, quiet: true })).toThrow();
     expect(existsSync(path.join(outside, "config.json"))).toBe(false);
   });
 });
@@ -252,5 +253,58 @@ describe("public output redaction", () => {
       spy.mockRestore();
     }
     expect(writes.join("")).not.toContain(token);
+  });
+});
+
+describe("symlinked root paths", () => {
+  test.skipIf(process.platform === "win32")(
+    "allows missing nested dirs under a symlinked root",
+    () => {
+      const realRoot = mkdtempSync(path.join(tmpdir(), "handoffmd-real-root-"));
+      const aliasParent = mkdtempSync(path.join(tmpdir(), "handoffmd-alias-"));
+      const alias = path.join(aliasParent, "root");
+      symlinkSync(realRoot, alias, "dir");
+      const file = path.join(alias, "new", "nested", "handoff.md");
+      expect(() => assertSafeWrite(alias, file)).not.toThrow();
+      writeFileInside(alias, file, "first");
+      expect(readFileSync(path.join(realRoot, "new", "nested", "handoff.md"), "utf8")).toBe(
+        "first"
+      );
+      expect(() => assertSafeRead(alias, path.join(alias, "missing", "file.md"))).not.toThrow();
+      expect(() => assertSafeWrite(alias, file)).not.toThrow();
+      writeFileInside(alias, file, "second");
+      expect(readFileSync(path.join(realRoot, "new", "nested", "handoff.md"), "utf8")).toBe(
+        "second"
+      );
+
+      const missingRoot = path.join(alias, "missing", "claude");
+      const missingFile = path.join(missingRoot, "skills", "handoffmd", "SKILL.md");
+      expect(() => assertSafeWrite(missingRoot, missingFile)).not.toThrow();
+      writeFileInside(missingRoot, missingFile, "skill");
+      expect(
+        readFileSync(
+          path.join(realRoot, "missing", "claude", "skills", "handoffmd", "SKILL.md"),
+          "utf8"
+        )
+      ).toBe("skill");
+    }
+  );
+});
+
+describe("internal symlink writes", () => {
+  test.skipIf(process.platform === "win32")("refuses a symlinked .handoff directory", async () => {
+    const dir = repo();
+    const src = path.join(dir, "src");
+    mkdirSync(src, { recursive: true });
+    const target = path.join(src, "config.json");
+    const original = JSON.stringify({ version: 1, file: "HANDOFF.md" });
+    writeFileSync(target, original);
+    symlinkSync(src, path.join(dir, ".handoff"), "dir");
+    expect(() =>
+      writeFileInside(dir, path.join(dir, ".handoff", "config.json"), "OVERWRITTEN")
+    ).toThrow("symlink");
+    expect(() => initCommand({ cwd: dir, quiet: true })).toThrow("symlink");
+    await expect(saveCommand({ cwd: dir, manual: true, quiet: true })).rejects.toThrow("symlink");
+    expect(readFileSync(target, "utf8")).toBe(original);
   });
 });

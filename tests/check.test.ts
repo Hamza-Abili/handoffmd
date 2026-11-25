@@ -323,7 +323,10 @@ describe("runTestCommand", () => {
     expect(failed.status).toBe("failed");
     const misleading = runTestCommand({
       cwd: process.cwd(),
-      command: "echo '0 failed, no errors'; exit 1",
+      command:
+        process.platform === "win32"
+          ? "echo 0 failed, no errors & exit 1"
+          : "echo '0 failed, no errors'; exit 1",
     });
     expect(misleading.status).toBe("failed");
   });
