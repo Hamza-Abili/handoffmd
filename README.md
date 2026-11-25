@@ -7,6 +7,7 @@ Verified session handoffs for any coding agent. One `HANDOFF.md`, grounded in gi
 [![CI](https://github.com/Hamza-Abili/handoffmd/actions/workflows/ci.yml/badge.svg)](https://github.com/Hamza-Abili/handoffmd/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/%40hamzaabili%2Fhandoffmd)](https://www.npmjs.com/package/@hamzaabili/handoffmd)
 [![npm downloads](https://img.shields.io/npm/dt/%40hamzaabili%2Fhandoffmd)](https://www.npmjs.com/package/@hamzaabili/handoffmd)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-handoffmd%20check-blue?logo=github)](https://github.com/marketplace/actions/handoffmd-check)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ## The problem
@@ -158,7 +159,7 @@ Any agent that can read `HANDOFF.md` can consume a handoff. The adapters only au
 
 ## Use it in CI
 
-`check` is designed to fail a pull request when a committed handoff is stale or unsafe:
+The action is published on the [GitHub Marketplace](https://github.com/marketplace/actions/handoffmd-check). `check` is designed to fail a pull request when a committed handoff is stale or unsafe:
 
 ```yaml
 - uses: actions/checkout@v4
