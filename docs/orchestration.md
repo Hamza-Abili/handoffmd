@@ -16,11 +16,11 @@ What it gives an orchestrator is a small, stable contract:
 
 ```bash
 # Agent A finishes a slice
-npx handoffmd save --from claude --json > /tmp/handoff-a.json
-npx handoffmd check --json
+npx @hamzaabili/handoffmd save --from claude --json > /tmp/handoff-a.json
+npx @hamzaabili/handoffmd check --json
 
 # Orchestrator chooses Agent B
-npx handoffmd load --for codex --json > /tmp/brief.json
+npx @hamzaabili/handoffmd load --for codex --json > /tmp/brief.json
 jq -r .brief /tmp/brief.json > /tmp/codex-prompt.txt
 # start Codex and pass /tmp/codex-prompt.txt as the first prompt
 ```
@@ -34,8 +34,8 @@ One worktree = one `HANDOFF.md` and one `.handoff/` directory. There is no share
 ```bash
 git worktree add ../app-auth -b feature/auth
 cd ../app-auth
-npx handoffmd init
-npx handoffmd save --from opencode
+npx @hamzaabili/handoffmd init
+npx @hamzaabili/handoffmd save --from opencode
 ```
 
 When the work is merged, archive or remove the worktree. `handoffmd prune --keep 5 --yes` cleans the local archives in the main checkout.
@@ -48,14 +48,14 @@ for (const task of tasks) {
   const result = await runAgent(task.agent, { cwd: worktree, prompt: task.prompt });
   if (result.status !== "done") continue;
 
-  await exec("npx", ["handoffmd", "save", "--from", task.agent, "--cwd", worktree]);
+  await exec("npx", ["@hamzaabili/handoffmd", "save", "--from", task.agent, "--cwd", worktree]);
   const check = JSON.parse(
-    await exec("npx", ["handoffmd", "check", "--json", "--cwd", worktree])
+    await exec("npx", ["@hamzaabili/handoffmd", "check", "--json", "--cwd", worktree])
   );
   if (!check.ok) throw new Error(`stale handoff: ${JSON.stringify(check.findings)}`);
 
   const next = JSON.parse(
-    await exec("npx", ["handoffmd", "load", "--for", task.nextAgent, "--json", "--cwd", worktree])
+    await exec("npx", ["@hamzaabili/handoffmd", "load", "--for", task.nextAgent, "--json", "--cwd", worktree])
   );
   await runAgent(task.nextAgent, { cwd: worktree, prompt: next.brief });
 }

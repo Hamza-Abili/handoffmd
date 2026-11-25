@@ -30,4 +30,4 @@ runs:
         if [ -n "${HANDOFFMD_ARGS}" ]; then
           read -r -a extra <<< "${HANDOFFMD_ARGS}"
         fi
-        npx --yes "handoffmd@${HANDOFFMD_VERSION}" check --strict "${extra[@]}"
+        npx --yes "@hamzaabili/handoffmd@${HANDOFFMD_VERSION}" check --strict "${extra[@]}"

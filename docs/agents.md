@@ -5,9 +5,9 @@
 ## Install the skill
 
 ```bash
-npx handoffmd init
+npx @hamzaabili/handoffmd init
 # or, later:
-npx handoffmd skill install --agents claude,codex,opencode,agents
+npx @hamzaabili/handoffmd skill install --agents claude,codex,opencode,agents
 ```
 
 Project-local paths:
@@ -28,7 +28,7 @@ Project-local paths:
 | OpenCode | `~/.config/opencode/skills/handoffmd/SKILL.md` |
 | Portable | `~/.agents/skills/handoffmd/SKILL.md` |
 
-`npx handoffmd skill path --agents all` prints the resolved paths.
+`npx @hamzaabili/handoffmd skill path --agents all` prints the resolved paths.
 
 ## Claude Code
 
@@ -59,7 +59,7 @@ OpenCode stores sessions in SQLite. The adapter reads `session_v2`, `session_mes
 Use a transcript file:
 
 ```bash
-npx handoffmd save --from generic --transcript ./session.jsonl
+npx @hamzaabili/handoffmd save --from generic --transcript ./session.jsonl
 ```
 
 Accepted shapes:
@@ -78,9 +78,9 @@ If you prefer not to install a skill, add this to `AGENTS.md` or `CLAUDE.md`:
 ## Session handoffs
 
 This repository uses `HANDOFF.md` for session handoffs. When starting work, run
-`npx handoffmd check` and `npx handoffmd load`. When finishing or switching
-agents, run `npx handoffmd save --from <agent>`, edit the narrative, then run
-`npx handoffmd save --lock && npx handoffmd check --strict`.
+`npx @hamzaabili/handoffmd check` and `npx @hamzaabili/handoffmd load`. When finishing or switching
+agents, run `npx @hamzaabili/handoffmd save --from <agent>`, edit the narrative, then run
+`npx @hamzaabili/handoffmd save --lock && npx @hamzaabili/handoffmd check --strict`.
 ```
 
 ## What the skill tells the agent

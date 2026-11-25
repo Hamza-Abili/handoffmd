@@ -1,5 +1,5 @@
 {
-  "name": "handoffmd",
+  "name": "@hamzaabili/handoffmd",
   "version": "0.1.0",
   "description": "Verified session handoffs for any coding agent. One HANDOFF.md, grounded in git evidence, checked for freshness and secrets, loadable by Claude Code, Codex, OpenCode or any agent.",
   "type": "module",

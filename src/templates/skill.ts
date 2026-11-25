@@ -9,21 +9,21 @@ ${SKILL_MARKER}
 
 # handoffmd
 
-Use \`npx handoffmd\` (or the local \`handoffmd\` binary) to hand work to another agent without losing context.
+Use \`npx @hamzaabili/handoffmd\` (or the local \`handoffmd\` binary) to hand work to another agent without losing context.
 
 ## When you are handing work off
 
-1. Run \`npx handoffmd save --from <claude|codex|opencode> --json\` to collect evidence from the current session and repository.
+1. Run \`npx @hamzaabili/handoffmd save --from <claude|codex|opencode> --json\` to collect evidence from the current session and repository.
 2. Read the generated \`HANDOFF.md\`. Rewrite the narrative sections so they capture **intent**, **decisions**, **dead ends**, and the **exact next step**. Do not invent facts: every claim must be supported by the session or the repository.
 3. Remove anything the next agent can reconstruct from \`git log\` or the code. Keep what cannot be reconstructed.
-4. Run \`npx handoffmd save --lock\` so the evidence matches the edited file.
-5. Run \`npx handoffmd check --strict\`. Fix every error before finishing.
-6. Tell the user the exact resume command: \`npx handoffmd load --for <agent>\`.
+4. Run \`npx @hamzaabili/handoffmd save --lock\` so the evidence matches the edited file.
+5. Run \`npx @hamzaabili/handoffmd check --strict\`. Fix every error before finishing.
+6. Tell the user the exact resume command: \`npx @hamzaabili/handoffmd load --for <agent>\`.
 
 ## When you are picking work up
 
-1. Run \`npx handoffmd check\`. If it is stale, stop and ask the user before trusting it.
-2. Run \`npx handoffmd load --for <claude|codex|opencode>\` to get the compact brief.
+1. Run \`npx @hamzaabili/handoffmd check\`. If it is stale, stop and ask the user before trusting it.
+2. Run \`npx @hamzaabili/handoffmd load --for <claude|codex|opencode>\` to get the compact brief.
 3. Verify the repository state yourself (\`git status\`, tests, the files named in the handoff).
 4. Continue from the first unchecked next step. Do not redo completed work or retry approaches listed under "What didn't work".
 

@@ -33,8 +33,8 @@ jobs:
       - name: Publish to npm (idempotent)
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          if npm view "handoffmd@${VERSION}" version >/dev/null 2>&1; then
-            echo "handoffmd@${VERSION} is already published"
+          if npm view "@hamzaabili/handoffmd@${VERSION}" version >/dev/null 2>&1; then
+            echo "@hamzaabili/handoffmd@${VERSION} is already published"
           else
             npm publish --provenance --access public
           fi

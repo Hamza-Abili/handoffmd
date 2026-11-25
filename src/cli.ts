@@ -143,10 +143,10 @@ Global options:
 ${GLOBAL}
 
 Examples:
-  npx handoffmd init
-  npx handoffmd save --from claude
-  npx handoffmd check --strict
-  npx handoffmd load --for codex
+  npx @hamzaabili/handoffmd init
+  npx @hamzaabili/handoffmd save --from claude
+  npx @hamzaabili/handoffmd check --strict
+  npx @hamzaabili/handoffmd load --for codex
 
 Docs: https://github.com/Hamza-Abili/handoffmd`;
 }

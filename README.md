@@ -5,8 +5,8 @@
 Verified session handoffs for any coding agent. One `HANDOFF.md`, grounded in git evidence, checked for freshness and secrets, loadable by Claude Code, Codex, OpenCode, or any agent that can read a file.
 
 [![CI](https://github.com/Hamza-Abili/handoffmd/actions/workflows/ci.yml/badge.svg)](https://github.com/Hamza-Abili/handoffmd/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/handoffmd)](https://www.npmjs.com/package/handoffmd)
-[![npm downloads](https://img.shields.io/npm/dt/handoffmd)](https://www.npmjs.com/package/handoffmd)
+[![npm](https://img.shields.io/npm/v/%40hamzaabili%2Fhandoffmd)](https://www.npmjs.com/package/@hamzaabili/handoffmd)
+[![npm downloads](https://img.shields.io/npm/dt/%40hamzaabili%2Fhandoffmd)](https://www.npmjs.com/package/@hamzaabili/handoffmd)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ## The problem
@@ -20,14 +20,14 @@ Native handoff exists, but it is single-vendor. Memory tools remember everything
 ## Quick start
 
 ```bash
-npx handoffmd init
-npx handoffmd save --from claude
+npx @hamzaabili/handoffmd init
+npx @hamzaabili/handoffmd save --from claude
 # review HANDOFF.md, then:
-npx handoffmd save --lock
-npx handoffmd check --strict
+npx @hamzaabili/handoffmd save --lock
+npx @hamzaabili/handoffmd check --strict
 
 # in the next agent:
-npx handoffmd load --for codex
+npx @hamzaabili/handoffmd load --for codex
 ```
 
 `init` creates `HANDOFF.md`, `.handoff/config.json` and the agent skill. `save` collects the session and git evidence. `check` verifies structure, freshness, secrets, links and token budget. `load` prints a compact brief for the next agent.
@@ -35,21 +35,21 @@ npx handoffmd load --for codex
 ## What it looks like
 
 ```text
-$ npx handoffmd save --from claude
+$ npx @hamzaabili/handoffmd save --from claude
 ✓ wrote HANDOFF.md from claude ses_01H...
   main@a1b2c3d, 3 changed file(s), ~740 tokens
   ⚠ narrative is auto-extracted; review it before handing off
 
 Next: review HANDOFF.md, then run `handoffmd save --lock` and `handoffmd check --strict`.
 
-$ npx handoffmd save --lock
+$ npx @hamzaabili/handoffmd save --lock
 ✓ locked HANDOFF.md to main@a1b2c3d
 
-$ npx handoffmd check --strict
+$ npx @hamzaabili/handoffmd check --strict
 HANDOFF.md · in-progress · main@a1b2c3d · just now · ~740 tokens
 ✓ handoff is clean and fresh
 
-$ npx handoffmd load --for codex
+$ npx @hamzaabili/handoffmd load --for codex
 # Handoff brief
 
 Repository: `/home/you/app`
@@ -73,9 +73,9 @@ Fix the OAuth callback so a failed login returns to the original page.
 ## Install
 
 ```bash
-npm install -g handoffmd
+npm install -g @hamzaabili/handoffmd
 # or run it without installing:
-npx handoffmd --help
+npx @hamzaabili/handoffmd --help
 ```
 
 Requires Node 22 or newer. Zero runtime dependencies. No network calls, no telemetry.
@@ -101,24 +101,24 @@ Run `handoffmd help <command>` for every option.
 
 ```bash
 # the normal flow: create or refresh a handoff from the current agent
-npx handoffmd save --from claude
-npx handoffmd save --from codex
-npx handoffmd save --from opencode
+npx @hamzaabili/handoffmd save --from claude
+npx @hamzaabili/handoffmd save --from codex
+npx @hamzaabili/handoffmd save --from opencode
 
 # no transcript available? build from git evidence only
-npx handoffmd save --manual
+npx @hamzaabili/handoffmd save --manual
 
 # run a test command and record fresh evidence
-npx handoffmd save --test "bun test"
+npx @hamzaabili/handoffmd save --test "bun test"
 
 # after editing the narrative, refresh the evidence hash without touching the text
-npx handoffmd save --lock
+npx @hamzaabili/handoffmd save --lock
 
 # start a new task, archive the old handoff
-npx handoffmd save --new
+npx @hamzaabili/handoffmd save --new
 
 # inspect without writing
-npx handoffmd save --from claude --dry-run --json
+npx @hamzaabili/handoffmd save --from claude --dry-run --json
 ```
 
 `save` preserves the narrative sections you edited. It only refreshes the evidence and frontmatter unless you pass `--rewrite`.
@@ -174,7 +174,7 @@ Or run the CLI directly with any Node setup:
 - uses: actions/setup-node@v4
   with:
     node-version: 22
-- run: npx handoffmd@0.1.0 check --strict
+- run: npx @hamzaabili/handoffmd@0.1.0 check --strict
 ```
 
 `check` exits `0` when clean, `1` on findings, and `2` on usage or internal errors.
