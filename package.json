@@ -1,0 +1,65 @@
+{
+  "name": "handoffmd",
+  "version": "0.1.0",
+  "description": "Verified session handoffs for any coding agent. One HANDOFF.md, grounded in git evidence, checked for freshness and secrets, loadable by Claude Code, Codex, OpenCode or any agent.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Hamza-Abili",
+  "keywords": [
+    "ai",
+    "coding-agents",
+    "claude-code",
+    "codex",
+    "opencode",
+    "handoff",
+    "session-handoff",
+    "agent-handoff",
+    "context-engineering",
+    "context-continuity",
+    "claude",
+    "codex",
+    "opencode",
+    "developer-tools",
+    "cli",
+    "agents"
+  ],
+  "homepage": "https://github.com/Hamza-Abili/handoffmd#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hamza-Abili/handoffmd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Hamza-Abili/handoffmd/issues"
+  },
+  "bin": {
+    "handoffmd": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "LICENSE",
+    "docs"
+  ],
+  "scripts": {
+    "build": "bun run scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "bun test",
+    "ci": "bun run lint && bun run typecheck && bun run test && bun run build",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.6",
+    "@types/bun": "^1.4.4",
+    "@types/node": "^22.0.0",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "bun@1.4.3"
+}

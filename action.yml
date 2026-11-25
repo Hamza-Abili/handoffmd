@@ -1,0 +1,33 @@
+name: handoffmd check
+description: Verify that HANDOFF.md is fresh, safe and within budget.
+author: Hamza Abili
+branding:
+  icon: check-circle
+  color: blue
+inputs:
+  version:
+    description: handoffmd version to run.
+    required: false
+    default: "0.1.0"
+  path:
+    description: Repository directory that contains HANDOFF.md.
+    required: false
+    default: "."
+  args:
+    description: Extra arguments for `handoffmd check` (for example `--allow-stale`).
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      working-directory: ${{ inputs.path }}
+      env:
+        HANDOFFMD_VERSION: ${{ inputs.version }}
+        HANDOFFMD_ARGS: ${{ inputs.args }}
+      run: |
+        extra=()
+        if [ -n "${HANDOFFMD_ARGS}" ]; then
+          read -r -a extra <<< "${HANDOFFMD_ARGS}"
+        fi
+        npx --yes "handoffmd@${HANDOFFMD_VERSION}" check --strict "${extra[@]}"

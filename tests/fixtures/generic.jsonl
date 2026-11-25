@@ -1,0 +1,2 @@
+{"role":"user","content":"Fix the login redirect bug","timestamp":"2026-11-25T12:00:00.000Z"}
+{"role":"assistant","content":"Tests pass. Next steps:\n- [ ] Add a redirect regression test","timestamp":"2026-11-25T12:00:01.000Z"}

@@ -1,0 +1,49 @@
+name: Bug report
+description: Report a reproducible problem with handoffmd.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, tokens or private transcripts. Redact them first.
+  - type: input
+    id: version
+    attributes:
+      label: handoffmd version
+      description: Output of `handoffmd --version`.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Node version, agent and agent version.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: The exact command, with secrets removed.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Include the output and exit code.
+    validations:
+      required: true
+  - type: textarea
+    id: handoff
+    attributes:
+      label: Minimal HANDOFF.md
+      description: A redacted example that reproduces the issue, if relevant.
+      render: markdown

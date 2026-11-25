@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.3
+      - run: bun install --frozen-lockfile --ignore-scripts
+      - run: bun run ci
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Check tag matches package version
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ "v${VERSION}" != "${GITHUB_REF_NAME}" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match package version ${VERSION}" >&2
+            exit 1
+          fi
+      - name: Publish to npm (idempotent)
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if npm view "handoffmd@${VERSION}" version >/dev/null 2>&1; then
+            echo "handoffmd@${VERSION} is already published"
+          else
+            npm publish --provenance --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Create GitHub release (idempotent)
+        run: |
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            echo "release ${GITHUB_REF_NAME} already exists"
+          else
+            gh release create "${GITHUB_REF_NAME}" --generate-notes --title "handoffmd ${GITHUB_REF_NAME}"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
